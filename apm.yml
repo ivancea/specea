@@ -1,0 +1,4 @@
+name: specea
+version: "0.1.0"
+description: Keep living specifications, tests, and implementation aligned
+includes: auto
