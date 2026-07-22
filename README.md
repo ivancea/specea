@@ -13,34 +13,52 @@ These annotations work in any language or test framework. From a test, the comme
 
 ## Installation
 
-Specea can be installed with [APM](https://github.com/microsoft/apm) or [`skills`](https://github.com/vercel-labs/skills).
+Choose the installation method that best fits your project and workflow:
 
 ### APM
 
-Install all Specea skills:
+First install [APM](https://github.com/microsoft/apm). Then run this command from your project root to add Specea to the project and install all its skills:
 
 ```shell
 apm install ivancea/specea
 ```
 
-Install one skill:
+The equivalent minimal `apm.yml` is:
+
+```yaml
+name: my-project
+version: "0.1.0"
+
+targets:
+  - opencode
+
+dependencies:
+  apm:
+    - ivancea/specea
+```
+
+With that manifest in place, install its dependencies with:
 
 ```shell
-apm install ivancea/specea --skill spec-create
+apm install
 ```
 
 ### npx skills
 
-Install all Specea skills:
+With Node.js installed, use [`skills`](https://github.com/vercel-labs/skills) without installing another CLI. Select the agents and project-level installation when prompted:
 
 ```shell
 npx skills add ivancea/specea
 ```
 
-Install one skill:
+## Usage
 
-```shell
-npx skills add ivancea/specea --skill spec-create
+Ask the agent to create, edit, or implement a specification as part of the task. The installed skill should be selected from the request and repository context; canonical IDs may be used to target an existing spec directly.
+
+```text
+Create a Specea spec for expiring inactive sessions.
+Edit spec:2026/07/22/implement-oauth to require PKCE.
+Implement spec:2026/07/22/implement-oauth#reject-invalid-state.
 ```
 
 The package provides these skills:
