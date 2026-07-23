@@ -63,9 +63,11 @@ Implement spec:2026/07/22/implement-oauth#reject-invalid-state.
 
 The package provides these skills:
 
+- `specea` activates the general workflow and selects the appropriate specialized skill.
 - `spec-create` investigates existing behavior and creates a specification only when no existing spec owns it.
 - `spec-edit` performs impact analysis before changing a living specification.
 - `spec-implement` implements a specification and keeps its tests and annotations aligned.
+- `spec-check` validates specification IDs, requirements, and references without depending on a test framework.
 
 ## Specification IDs
 
@@ -108,6 +110,7 @@ The creation date and identifiers remain stable as the living specification chan
 
 ## Documentation
 
+- [Small example project](example/)
 - [Specification format and annotations](docs/specifications.md)
 - [Spec-driven workflow](docs/workflow.md)
 
