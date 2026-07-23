@@ -71,13 +71,13 @@ The package provides these skills:
 
 ## Specification IDs
 
-Specifications live in a creation-date path under `.specs`:
+Specifications live under `.specea/specs`, for example:
 
 ```text
-.specs/2026/07/22/implement-oauth/spec.md
+.specea/specs/2026/07/22/implement-oauth/spec.md
 ```
 
-Its `spec.md` declares the stable ID in YAML frontmatter:
+The `spec.md` declares its canonical ID in YAML frontmatter. The ID is `spec:` followed by the specification directory path relative to `.specea/specs`:
 
 ```markdown
 ---
@@ -85,7 +85,7 @@ id: "spec:2026/07/22/implement-oauth"
 ---
 ```
 
-The declared ID must match the specification's creation-date path.
+The declared ID must exactly match its directory path. Moving the specification therefore changes its ID and requires updating every reference.
 
 Requirements are `###` headings directly below the specification's `## Requirements` section. Appending the requirement name creates a requirement ID:
 
@@ -106,7 +106,7 @@ stored for the authentication attempt.
 spec:2026/07/22/implement-oauth#reject-invalid-state
 ```
 
-The creation date and identifiers remain stable as the living specification changes. Git retains the history.
+The ID remains stable while the specification stays in the same directory. Git retains its history.
 
 ## Documentation
 

@@ -1,6 +1,6 @@
 ---
 name: specea
-description: Applies Specea whenever work may affect living specifications, specified behavior, tests with spec annotations, or a repository containing .specs. Use it to select the correct Specea workflow before changing behavior, tests, or specifications.
+description: Applies Specea whenever work may affect living specifications, specified behavior, tests with spec annotations, or a repository containing .specea/specs. Use it to select the correct Specea workflow before changing behavior, tests, or specifications.
 metadata:
   author: ivancea
   version: "0.1.0"

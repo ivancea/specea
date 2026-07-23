@@ -6,8 +6,8 @@
 2. Search related implementation and tests, including existing `spec:` annotations, to identify behavior already owned by a specification.
 3. Decide whether the request creates distinct behavior or changes an existing living specification.
 4. If an existing specification owns the behavior, update it instead of creating an overlapping one. If ownership or intent is ambiguous, explain the overlap and ask whether existing behavior should change or the new behavior is independent.
-5. Create `.specs/YYYY/MM/DD/unique-description/spec.md` only when a new specification is appropriate. Verify that the path is unused.
-6. Add YAML frontmatter containing `id: "spec:YYYY/MM/DD/unique-description"`. The declared ID must exactly match the creation-date path.
+5. Choose any directory under `.specea/specs`, following the project's existing organization when practical. Its root file must be named `spec.md`, and that file path must not already be used by another specification.
+6. Add YAML frontmatter whose `id` is `spec:` followed by the exact directory path relative to `.specea/specs`.
 7. Describe the feature and give every requirement a unique valid name.
 8. Inspect related tests before implementation to determine which existing behaviors must remain valid and which tests may need to change.
 9. Implement the specification and add or update tests. Every test created specifically for the spec must annotate the full spec ID or narrowest applicable requirement ID.
@@ -27,7 +27,7 @@ Before changing a specification or requirement, perform impact analysis:
 
 Renaming, renumbering, or removing a requirement requires a repository-wide scan. Update or remove all references in the same change. Never silently reuse a requirement name for different behavior.
 
-Moving or renaming a specification directory has the same requirement. Prefer keeping its original creation path stable.
+Moving or renaming a specification directory changes its canonical ID. Verify that the destination remains under `.specea/specs` and that its target `spec.md` does not already exist, then update the frontmatter ID and every repository reference in the same change.
 
 When functionality is intentionally removed in full, delete its living specification, related tests, implementation, and all references in the same coherent change. Git retains the specification's history.
 
@@ -52,11 +52,11 @@ When changing code associated with annotated tests, inspect those tests and thei
 
 Before completing spec-driven work, verify:
 
-- The spec path and all requirement names are valid and unique.
-- Every `spec.md` declares an ID that exactly matches its creation-date path.
+- Every spec has a root `spec.md` in its own directory under `.specea/specs`, and all requirement names are valid and unique.
+- Every `spec.md` declares the canonical ID derived from its exact directory path.
 - Every new spec-driven test has an accurate `spec:` annotation.
 - Every referenced spec, artifact, and requirement exists.
-- No renamed, renumbered, removed, or moved identifier has stale references.
+- No changed or removed canonical or requirement identifier has stale references.
 - Related tests were considered when a spec changed.
 - Related specs were considered when a test or behavior changed.
 - Affected living specs, implementation, and tests describe the same current behavior.

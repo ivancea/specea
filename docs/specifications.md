@@ -2,22 +2,32 @@
 
 ## Directory Structure
 
-Specifications live under `.specs` and are partitioned by creation date:
+Specifications live under `.specea/specs`. Other Specea configuration and project data may live alongside `specs` under `.specea`. Organization inside `specs` is free as long as every specification has a root `spec.md` inside its own directory.
+
+For example, a project may organize specifications by full creation date:
 
 ```text
-.specs/
-  2026/
-    07/
-      22/
-        implement-oauth/
-          spec.md
-          example-response.json
-          notes.md
+.specea/specs/2026/07/22/implement-oauth/spec.md
 ```
 
-The directory name must be short, descriptive, and unique within its date. The date is the specification's creation date and never changes, even when the specification is later updated.
+Or directly by descriptive name:
 
-The root `spec.md` declares its canonical ID in YAML frontmatter:
+```text
+.specea/specs/implement-oauth/spec.md
+```
+
+Supporting artifacts live beside `spec.md` wherever the project places it:
+
+```text
+implement-oauth/
+  spec.md
+  example-response.json
+  notes.md
+```
+
+Directory names should ideally contain only `a-z`, `A-Z`, `0-9`, `_`, and `-`. Other characters are allowed, but may produce IDs that look strange, are difficult to read, or are confusing in references.
+
+The root `spec.md` declares its canonical ID in YAML frontmatter. The ID is `spec:` followed by the exact specification directory path relative to `.specea/specs`:
 
 ```markdown
 ---
@@ -25,13 +35,13 @@ id: "spec:2026/07/22/implement-oauth"
 ---
 ```
 
-The `id` field is required and must exactly match the ID derived from the creation-date path. The ID maps to `.specs/2026/07/22/implement-oauth/` and refers to its root `spec.md`. Supporting artifacts use their path relative to the specification directory:
+The `id` field is required and must exactly match the directory path. For example, `.specea/specs/implement-oauth/spec.md` declares `id: "spec:implement-oauth"`. Moving or renaming a specification directory changes its ID and requires updating its frontmatter and every reference. Supporting artifacts use their path relative to the specification directory:
 
 ```text
 spec:2026/07/22/implement-oauth/example-response.json
 ```
 
-Use lower-case ASCII kebab-case for the specification directory. Searching for `2026/07/22/implement-oauth` finds both the directory and references to it.
+Searching for the full ID finds the specification declaration and every reference to it.
 
 ## Requirements
 

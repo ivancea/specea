@@ -19,7 +19,7 @@ Resolve `<skill-directory>` to the directory containing this `SKILL.md`. If the 
 
 The validator checks that:
 
-- Every `.specs/YYYY/MM/DD/name/spec.md` has a matching frontmatter `id`.
+- Every specification has a root `.specea/specs/**/spec.md` inside its own directory and a frontmatter `id` that exactly matches that directory path.
 - Requirement headings are valid and unique direct children of `## Requirements`.
 - Every discovered `spec:` reference is canonical and resolves to an existing spec, requirement, or supporting artifact.
 

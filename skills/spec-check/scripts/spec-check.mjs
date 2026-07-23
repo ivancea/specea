@@ -2,13 +2,15 @@
 
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const root = resolve(process.argv[2] ?? process.cwd());
 const ignoredDirectories = new Set([".git", ".agents", "apm_modules", "node_modules"]);
 const files = [];
 const errors = [];
 const specs = new Map();
-const specsRoot = resolve(root, ".specs");
+const specsRoot = resolve(root, ".specea", "specs");
+const skillRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 if (!existsSync(root) || !statSync(root).isDirectory()) {
   console.error(`spec-check: not a directory: ${root}`);
@@ -24,7 +26,8 @@ function addError(file, message, line) {
 }
 
 function walk(directory) {
-  if (directory !== root && existsSync(resolve(directory, ".specs"))) return;
+  if (directory === skillRoot) return;
+  if (directory !== root && existsSync(resolve(directory, ".specea", "specs"))) return;
 
   for (const entry of readdirSync(directory, { withFileTypes: true })) {
     if (entry.isSymbolicLink()) continue;
@@ -43,34 +46,20 @@ function validRequirementName(name) {
   return /^(?=.*[a-z])[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name);
 }
 
-function validDate(year, month, day) {
-  const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
-  return (
-    date.getUTCFullYear() === Number(year) &&
-    date.getUTCMonth() === Number(month) - 1 &&
-    date.getUTCDate() === Number(day)
-  );
-}
-
 function parseSpec(file) {
   const specPath = relative(specsRoot, file);
   if (specPath.startsWith(`..${sep}`) || specPath === "..") return;
 
   const specSegments = specPath.split(sep);
-  if (
-    specSegments.length !== 5 ||
-    !/^\d{4}$/.test(specSegments[0]) ||
-    !/^\d{2}$/.test(specSegments[1]) ||
-    !/^\d{2}$/.test(specSegments[2]) ||
-    !validDate(specSegments[0], specSegments[1], specSegments[2]) ||
-    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(specSegments[3]) ||
-    specSegments[4] !== "spec.md"
-  ) {
-    addError(file, "spec path must be .specs/YYYY/MM/DD/lower-kebab-case/spec.md");
+  if (specSegments.at(-1) !== "spec.md") return;
+
+  if (specSegments.length < 2) {
+    addError(file, "spec.md must be inside its own directory under .specea/specs");
     return;
   }
 
-  const id = `spec:${specSegments.slice(0, 4).join("/")}`;
+  const expectedId = `spec:${specSegments.slice(0, -1).join("/")}`;
+
   const content = readFileSync(file, "utf8");
   const frontmatter = content.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
   const idMatch = frontmatter?.[1].match(/^id:\s*(?:"([^"]+)"|'([^']+)'|(\S+))\s*$/m);
@@ -78,7 +67,9 @@ function parseSpec(file) {
 
   if (!frontmatter) addError(file, "missing YAML frontmatter");
   else if (!declaredId) addError(file, "frontmatter must contain an id");
-  else if (declaredId !== id) addError(file, `frontmatter id must be ${JSON.stringify(id)}`);
+  else if (declaredId !== expectedId) {
+    addError(file, `frontmatter id must be ${JSON.stringify(expectedId)}`);
+  }
 
   const requirements = new Set();
   const lines = content.split(/\r?\n/);
@@ -119,8 +110,7 @@ function parseSpec(file) {
   }
 
   if (!foundRequirements) addError(file, "missing ## Requirements section");
-  if (specs.has(id)) addError(file, `duplicate specification id ${id}`);
-  else specs.set(id, { directory: dirname(file), file, requirements });
+  specs.set(expectedId, { directory: dirname(file), file, requirements });
 }
 
 function lineAt(content, index) {
@@ -156,44 +146,73 @@ function checkReferences(file) {
   if (content.includes("\0")) return;
   content = removeMarkdownExamples(file, content);
 
+  const handledRanges = [];
+  const sortedSpecs = [...specs.entries()].sort(([left], [right]) => right.length - left.length);
+
+  for (const [id, spec] of sortedSpecs) {
+    let fromIndex = 0;
+    while (fromIndex < content.length) {
+      const index = content.indexOf(id, fromIndex);
+      if (index < 0) break;
+      fromIndex = index + id.length;
+      if (handledRanges.some(([start, end]) => index >= start && index < end)) continue;
+
+      let end = index + id.length;
+      const following = content[end];
+      if (following && /[A-Za-z0-9_-]/.test(following)) continue;
+      if (following && /\s/.test(following)) {
+        const restOfLine = content.slice(end).match(/^[^\r\n]*/)?.[0].trim();
+        if (restOfLine) continue;
+      }
+
+      let requirement;
+      let artifact;
+      if (following === "#") {
+        const match = content.slice(end + 1).match(/^([a-z0-9]+(?:-[a-z0-9]+)*)/);
+        if (!match) {
+          addError(file, `invalid spec reference ${JSON.stringify(`${id}#`)}`, lineAt(content, index));
+          handledRanges.push([index, end + 1]);
+          continue;
+        }
+        requirement = match[1];
+        end += requirement.length + 1;
+      } else if (following === "/") {
+        const match = content.slice(end + 1).match(/^([^\s"'`<>()\[\]{},;]+)/);
+        if (match) {
+          artifact = match[1].replace(/[.!?:]+$/, "");
+          end += artifact.length + 1;
+        }
+      }
+
+      handledRanges.push([index, end]);
+      const reference = content.slice(index, end);
+      const line = lineAt(content, index);
+      if (requirement && !spec.requirements.has(requirement)) {
+        addError(file, `referenced requirement does not exist: ${reference}`, line);
+      } else if (artifact) {
+        const artifactSegments = artifact.split("/");
+        if (
+          artifact.includes("\\") ||
+          artifactSegments.some((segment) => !segment || segment === "." || segment === "..")
+        ) {
+          addError(file, `invalid artifact reference ${JSON.stringify(reference)}`, line);
+          continue;
+        }
+        const artifactFile = resolve(spec.directory, artifact);
+        const insideSpec = artifactFile.startsWith(`${spec.directory}${sep}`);
+        if (!insideSpec || !existsSync(artifactFile)) {
+          addError(file, `referenced artifact does not exist: ${reference}`, line);
+        }
+      }
+    }
+  }
+
   const referencePattern = /spec:[^\s"'`<>()\[\]{},;]+/g;
-  const canonicalPattern = /^spec:(\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+(?:-[a-z0-9]+)*)(?:#([a-z0-9]+(?:-[a-z0-9]+)*)|\/(.+))?$/;
-
   for (const match of content.matchAll(referencePattern)) {
-    let reference = match[0];
-    const line = lineAt(content, match.index);
-    let parsed = reference.match(canonicalPattern);
-    while (!parsed && /[.!?:]$/.test(reference)) {
-      reference = reference.slice(0, -1);
-      parsed = reference.match(canonicalPattern);
-    }
-    if (!/^spec:\d{4}\//.test(reference)) continue;
-    if (!parsed || (parsed[2] && !validRequirementName(parsed[2]))) {
-      addError(file, `invalid spec reference ${JSON.stringify(reference)}`, line);
-      continue;
-    }
-
-    const id = `spec:${parsed[1]}`;
-    const spec = specs.get(id);
-    if (!spec) {
-      addError(file, `referenced specification does not exist: ${id}`, line);
-    } else if (parsed[2] && !spec.requirements.has(parsed[2])) {
-      addError(file, `referenced requirement does not exist: ${reference}`, line);
-    } else if (parsed[3]) {
-      const artifactSegments = parsed[3].split("/");
-      if (
-        parsed[3].includes("\\") ||
-        artifactSegments.some((segment) => !segment || segment === "." || segment === "..")
-      ) {
-        addError(file, `invalid artifact reference ${JSON.stringify(reference)}`, line);
-        continue;
-      }
-      const artifact = resolve(spec.directory, parsed[3]);
-      const insideSpec = artifact.startsWith(`${spec.directory}${sep}`);
-      if (!insideSpec || !existsSync(artifact)) {
-        addError(file, `referenced artifact does not exist: ${reference}`, line);
-      }
-    }
+    if (handledRanges.some(([start, end]) => match.index >= start && match.index < end)) continue;
+    if (!/^spec:[A-Za-z0-9_]/.test(match[0])) continue;
+    const reference = match[0].replace(/[.!?:]+$/, "");
+    addError(file, `unresolved or ambiguous spec reference: ${reference}`, lineAt(content, match.index));
   }
 }
 

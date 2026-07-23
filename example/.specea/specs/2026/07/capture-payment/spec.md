@@ -1,5 +1,5 @@
 ---
-id: "spec:2026/07/22/capture-payment"
+id: "spec:2026/07/capture-payment"
 ---
 
 # Payment Capture

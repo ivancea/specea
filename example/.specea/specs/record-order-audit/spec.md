@@ -1,5 +1,5 @@
 ---
-id: "spec:2026/07/22/record-order-audit"
+id: "spec:record-order-audit"
 ---
 
 # Order Audit Log
