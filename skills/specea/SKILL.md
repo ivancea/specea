@@ -8,6 +8,8 @@ metadata:
 
 # Specea
 
+Before selecting or applying a workflow, read `.specea/config.md`. If it is missing, use `specea-init` before other Specea work.
+
 Before changing specified behavior, inspect the relevant specs, every test that references them, and the related implementation. Keep living specs, tests, annotations, and implementation aligned.
 
 - Use `spec-create` for distinct new behavior after checking for existing ownership.

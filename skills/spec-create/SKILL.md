@@ -16,17 +16,18 @@ You may create a new `spec.md` and supporting artifacts under `.specea/specs`. D
 
 ## Investigate
 
-1. Read repository guidance and any Specea documentation available in the project.
-2. Search `.specea/specs` by requested terminology, synonyms, neighboring features, and relevant domain concepts.
-3. Search implementation and tests for the same concepts and for nearby `spec:` annotations.
-4. Read plausible owning specs, their referenced tests, and relevant implementation.
-5. Decide whether the request is new coherent behavior or a change to behavior already owned by a living spec.
+1. Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`.
+2. Read repository guidance and any other Specea documentation available in the project.
+3. Search `.specea/specs` by requested terminology, synonyms, neighboring features, and relevant domain concepts.
+4. Search implementation and tests for the same concepts and for nearby `spec:` annotations.
+5. Read plausible owning specs, their referenced tests, and relevant implementation.
+6. Decide whether the request is new coherent behavior or a change to behavior already owned by a living spec.
 
 If ownership, scope, or intended behavior is ambiguous, present the concrete overlap and ask one focused question. Never resolve a product decision by assumption.
 
 ## Create
 
-1. Choose any directory under `.specea/specs`, following the project's existing organization when practical. The specification root must be named `spec.md`, and that file path must not already exist.
+1. Choose a directory under `.specea/specs` using the organization recorded in `.specea/config.md`. The specification root must be named `spec.md`, and that file path must not already exist.
 2. Prefer directory names containing only `a-z`, `A-Z`, `0-9`, `_`, and `-`. Other characters are allowed but can make IDs strange or confusing.
 3. Create `spec.md` with YAML frontmatter whose `id` is `spec:` followed by the exact directory path relative to `.specea/specs`.
 4. Search all `.specea/specs/**/spec.md` frontmatter and verify that the resulting canonical ID is unique.

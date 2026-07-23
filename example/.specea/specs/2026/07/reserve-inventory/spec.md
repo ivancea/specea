@@ -1,5 +1,5 @@
 ---
-id: "spec:2026/07/21/reserve-inventory"
+id: "spec:2026/07/reserve-inventory"
 ---
 
 # Inventory Reservation

@@ -16,12 +16,13 @@ You may edit the target specification, supporting artifacts, every clearly affec
 
 ## Resolve and Inspect
 
-1. Read repository guidance and any Specea documentation available in the project.
-2. Resolve `spec:<path>` by finding the matching frontmatter `id` under `.specea/specs/**/spec.md`. Resolve `#<requirement>` as the exact direct `###` child of `## Requirements`, and resolve `/<relative-path>` from that specification's directory.
-3. Search the entire repository for the full spec ID and all affected requirement IDs before editing.
-4. Read every directly related test and inspect relevant implementation.
-5. Search other specs for affected concepts, dependencies, contradictory behavior, and overlapping ownership.
-6. Compare the requested behavior with what the current spec and tests assert.
+1. Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`.
+2. Read repository guidance and any other Specea documentation available in the project.
+3. Resolve `spec:<path>` by finding the matching frontmatter `id` under `.specea/specs/**/spec.md`. Resolve `#<requirement>` as the exact direct `###` child of `## Requirements`, and resolve `/<relative-path>` from that specification's directory.
+4. Search the entire repository for the full spec ID and all affected requirement IDs before editing.
+5. Read every directly related test and inspect relevant implementation.
+6. Search other specs for affected concepts, dependencies, contradictory behavior, and overlapping ownership.
+7. Compare the requested behavior with what the current spec and tests assert.
 
 If the change creates unclear ownership, contradicts another spec, or requires a product choice not supplied by the user, explain the exact conflict and ask one focused question before editing.
 

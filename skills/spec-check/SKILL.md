@@ -9,6 +9,8 @@ metadata:
 
 # Check Specea Specifications
 
+Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`.
+
 Run the bundled validator with the repository root as its argument:
 
 ```shell

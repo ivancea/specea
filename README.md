@@ -53,7 +53,13 @@ npx skills add ivancea/specea
 
 ## Usage
 
-Ask the agent to create, edit, or implement a specification as part of the task. The installed skill should be selected from the request and repository context; canonical IDs may be used to target an existing spec directly.
+Initialize Specea once in the project. The agent will ask how specification directories should be organized and create `.specea/config.md` plus `.specea/specs`:
+
+```text
+Initialize Specea in this repository.
+```
+
+After initialization, ask the agent to create, edit, or implement a specification as part of the task. The installed skill should be selected from the request and repository context; canonical IDs may be used to target an existing spec directly.
 
 ```text
 Create a Specea spec for expiring inactive sessions.
@@ -64,6 +70,7 @@ Implement spec:2026/07/22/implement-oauth#reject-invalid-state.
 The package provides these skills:
 
 - `specea` activates the general workflow and selects the appropriate specialized skill.
+- `specea-init` initializes `.specea/config.md` and `.specea/specs` for a project.
 - `spec-create` investigates existing behavior and creates a specification only when no existing spec owns it.
 - `spec-edit` performs impact analysis before changing a living specification.
 - `spec-implement` implements a specification and keeps its tests and annotations aligned.

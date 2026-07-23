@@ -16,13 +16,14 @@ You may modify implementation, tests, the target living specification, and other
 
 ## Investigate
 
-1. Read repository guidance and any Specea documentation available in the project.
-2. Resolve `spec:<path>` by finding the matching frontmatter `id` under `.specea/specs/**/spec.md`, `#<requirement>` as the exact direct `###` child of `## Requirements`, and `/<relative-path>` from that specification's directory. Read the complete spec and relevant artifacts.
-3. Search the entire repository for the full spec ID and every requirement ID in that spec.
-4. Read all referenced tests, related unannotated tests, and relevant implementation before writing code.
-5. Before modifying or deleting a test, resolve and read every spec and requirement annotated by that test, including section- or assertion-level annotations.
-6. Search neighboring specifications for interaction, overlap, and constraints that must remain valid.
-7. Compare the requested implementation with current behavior and identify the smallest coherent change.
+1. Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`.
+2. Read repository guidance and any other Specea documentation available in the project.
+3. Resolve `spec:<path>` by finding the matching frontmatter `id` under `.specea/specs/**/spec.md`, `#<requirement>` as the exact direct `###` child of `## Requirements`, and `/<relative-path>` from that specification's directory. Read the complete spec and relevant artifacts.
+4. Search the entire repository for the full spec ID and every requirement ID in that spec.
+5. Read all referenced tests, related unannotated tests, and relevant implementation before writing code.
+6. Before modifying or deleting a test, resolve and read every spec and requirement annotated by that test, including section- or assertion-level annotations.
+7. Search neighboring specifications for interaction, overlap, and constraints that must remain valid.
+8. Compare the requested implementation with current behavior and identify the smallest coherent change.
 
 If specifications conflict, ownership is unclear, or the implementation requires unspecified product behavior, present the conflict and ask one focused question.
 
