@@ -16,7 +16,7 @@ You may create a new `spec.md` and supporting artifacts under `.specea/specs`. D
 
 ## Investigate
 
-1. Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`.
+1. Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`. Use its configured language for the specification, its directory path, and Specea-facing output; keep the config itself in English. Follow every project-specific additional instruction in the config.
 2. Read repository guidance and any other Specea documentation available in the project.
 3. Search `.specea/specs` by requested terminology, synonyms, neighboring features, and relevant domain concepts.
 4. Search implementation and tests for the same concepts and for nearby `spec:` annotations.

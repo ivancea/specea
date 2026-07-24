@@ -53,7 +53,7 @@ npx skills add ivancea/specea
 
 ## Usage
 
-Initialize Specea once in the project. The agent will ask how specification directories should be organized and create `.specea/config.md` plus `.specea/specs`:
+Initialize Specea once in the project. The agent will ask how specification directories should be organized and create `.specea/config.md` plus `.specea/specs`. English is used by default; when the initialization prompt uses another language, the agent also asks which language to use for specs and their paths. The config itself always remains in English.
 
 ```text
 Initialize Specea in this repository.

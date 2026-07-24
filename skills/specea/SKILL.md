@@ -8,7 +8,7 @@ metadata:
 
 # Specea
 
-Before selecting or applying a workflow, read `.specea/config.md`. If it is missing, use `specea-init` before other Specea work.
+Before selecting or applying a workflow, read `.specea/config.md`. If it is missing, use `specea-init` before other Specea work. Use its configured language for specs, specification paths, and Specea-facing output; keep the config itself in English. Follow every project-specific additional instruction in the config.
 
 Before changing specified behavior, inspect the relevant specs, every test that references them, and the related implementation. Keep living specs, tests, annotations, and implementation aligned.
 

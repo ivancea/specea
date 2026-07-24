@@ -1,5 +1,7 @@
 # Spec-Driven Workflow
 
+Before any Specea workflow, read `.specea/config.md`. Use its configured language for specifications, specification paths, and Specea-facing output. The config itself is always written in English.
+
 ## Creating a Specification
 
 1. Search existing specifications for the requested behavior, related terminology, and neighboring functionality.

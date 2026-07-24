@@ -9,7 +9,7 @@ metadata:
 
 # Check Specea Specifications
 
-Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`.
+Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`. Present the check result in its configured language; keep the config itself in English. Follow every project-specific additional instruction in the config.
 
 Run the bundled validator with the repository root as its argument:
 

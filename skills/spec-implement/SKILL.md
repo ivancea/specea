@@ -16,7 +16,7 @@ You may modify implementation, tests, the target living specification, and other
 
 ## Investigate
 
-1. Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`.
+1. Before any other action, read `.specea/config.md`. If it is missing, stop and use `specea-init`. Use its configured language for specs, specification paths, and Specea-facing output; keep the config itself in English. Follow every project-specific additional instruction in the config.
 2. Read repository guidance and any other Specea documentation available in the project.
 3. Resolve `spec:<path>` by finding the matching frontmatter `id` under `.specea/specs/**/spec.md`, `#<requirement>` as the exact direct `###` child of `## Requirements`, and `/<relative-path>` from that specification's directory. Read the complete spec and relevant artifacts.
 4. Search the entire repository for the full spec ID and every requirement ID in that spec.
